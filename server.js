@@ -1,4 +1,3 @@
-
 const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
@@ -13,8 +12,9 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
-    database: 'animeflix'
+    password: 'senac',
+    database: 'animeflix', 
+    port: 3307
 });
 
 // Conectando ao banco de dados
@@ -27,8 +27,8 @@ db.connect(err => {
 });
 
 // Rota GET para listar todas as pessoas
-app.get('/api/pessoas', (req, res) => {
-    db.query('SELECT * FROM pessoa', (err, results) => {
+app.get('/api/pessoa', (req, res) => {
+    db.query('SELECT * FROM pessoa WHERE id_pessoa = 1', (err, results) => {
         if (err) {
             console.error('Erro ao buscar dados:', err);
             res.status(500).send('Erro ao buscar dados');
@@ -41,18 +41,6 @@ app.get('/api/pessoas', (req, res) => {
 // Iniciando o servidor na porta 3000
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log('Servidor rodando em http://localhost:${PORT}');
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
 
-// HTML + JavaScript no frontend
-// Chama a API para exibir a lista de personagens
-fetch('http://localhost:3000/api/pessoa')
-    .then(response => response.json())
-    .then(data => {
-        const list = document.getElementById('character-list');
-        data.forEach(person => {
-            list.innerHTML += `<p>${person.nome} (${person.idade}) - ${person.email}</p>`;
-
-        });
-    })
-.catch(error => console.error('Erro:', error));
